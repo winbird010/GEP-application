@@ -1,0 +1,25 @@
+# 环境变量（含密码）
+.env
+.env.local
+
+# Python 缓存
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# 数据库（SQLite 不应该提交）
+*.db
+*.sqlite
+*.sqlite3
+
+# 临时验证脚本
+verify_env.py
+
+# IDE
+.idea/
+.vscode/
+
+# Alembic 缓存（只保留 py 文件，不保留 pyc）
+alembic/__pycache__/
+alembic/versions/__pycache__/

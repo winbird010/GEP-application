@@ -4,11 +4,12 @@
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
 from sqlalchemy.pool import NullPool
 from app.db.base import Base
+from app.core.config import settings
 
 DATABASE_URL = "sqlite+aiosqlite:///./gep.db"
 
 engine = create_async_engine(
-    DATABASE_URL,
+    settings.DATABASE_URL_ASYNC,
     echo=False,               # 生产关闭日志
     poolclass=NullPool,         # ← 关键：SQLite 只能用它
     # pool_size=20,             # 同步池大小

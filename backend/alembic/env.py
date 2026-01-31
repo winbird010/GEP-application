@@ -1,16 +1,14 @@
 # alembic/env.py
 import asyncio
 from logging.config import fileConfig
-
 from sqlalchemy import engine_from_config, pool
 from sqlalchemy.engine import Connection
-# 移除：from sqlalchemy.ext.asyncio import AsyncEngine
-
 from alembic import context
 
 # 导入模型基类
 from app.db.base import Base
 from app.models.content import Content  # 确保导入所有模型
+from app.core.config import settings
 
 # this is the Alembic Config object
 config = context.config
@@ -27,7 +25,8 @@ target_metadata = Base.metadata
 # 在 alembic.ini 中配置同步 URL，或在这里覆盖
 def get_url():
     # 同步 SQLite URL
-    return "sqlite:///./gep.db"
+    # return "sqlite:///./gep.db"
+    return settings.DATABASE_URL
 
 
 def run_migrations_offline() -> None:
@@ -55,7 +54,7 @@ def run_migrations_online() -> None:
     """Run migrations in 'online' mode."""
     # 使用同步引擎
     configuration = config.get_section(config.config_ini_section)
-    configuration["sqlalchemy.url"] = get_url()
+    # configuration["sqlalchemy.url"] = get_url()
 
     connectable = engine_from_config(
         configuration,
