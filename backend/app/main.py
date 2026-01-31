@@ -20,6 +20,11 @@ async def health_check():
     return {"status": "ok", "service": "gep-api", "version": "1.0.0"}
 
 
+@app.get("/")
+async def root():
+    return {"message": "GEP API", "docs": "/docs", "health": "/api/health"}
+
+
 from app.routers import content
 
 app.include_router(content.router)

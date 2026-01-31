@@ -1,6 +1,7 @@
 #!/user/bin/env python3
 # -*- coding: utf-8 -*-
 
+import os
 import sys
 from pathlib import Path
 sys.path.append(str(Path(__file__).parent.parent))
@@ -12,7 +13,7 @@ from app.db.base import Base
 from app.models.content import Content
 
 # 数据库配置（与 app/db/session.py 一致）
-DATABASE_URL = "sqlite+aiosqlite:///./gep.db"
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite+aiosqlite:///./gep.db")
 engine = create_async_engine(DATABASE_URL, echo=True)
 async_session_maker = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
 
