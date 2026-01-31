@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: gep-api
+    plan: free
+    env: python
+    # 关键：先进入 backend 目录，再执行构建
+    buildCommand: "cd backend && bash bin/render-build.sh"
+    startCommand: "cd backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.0"
