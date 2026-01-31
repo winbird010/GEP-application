@@ -2,7 +2,6 @@
 set -o errexit
 
 echo ">>> Installing backend deps..."
-cd backend
 pip install --upgrade pip
 pip install -r requirements.txt
 
