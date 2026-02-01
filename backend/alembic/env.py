@@ -21,12 +21,21 @@ if config.config_file_name is not None:
 target_metadata = Base.metadata
 
 
-# 关键修改：使用同步 URL（去掉 +aiosqlite）
-# 在 alembic.ini 中配置同步 URL，或在这里覆盖
 def get_url():
-    # 同步 SQLite URL
-    # return "sqlite:///./gep.db"
-    return settings.DATABASE_URL
+    """
+    获取数据库 URL 并转换为 Alembic 可用的同步格式
+    """
+    url = settings.DATABASE_URL
+
+    # 关键修改：Alembic 需要同步驱动，将异步驱动标识替换为同步的
+    if "+asyncpg" in url:
+        # 将 +asyncpg 替换为 +psycopg2（明确指定同步驱动）
+        url = url.replace("+asyncpg", "+psycopg2")
+    elif "+aiosqlite" in url:
+        # 如果是 SQLite，去掉 +aiosqlite（SQLite 不区分同步异步）
+        url = url.replace("+aiosqlite", "")
+
+    return url
 
 
 def run_migrations_offline() -> None:
@@ -54,7 +63,9 @@ def run_migrations_online() -> None:
     """Run migrations in 'online' mode."""
     # 使用同步引擎
     configuration = config.get_section(config.config_ini_section)
-    # configuration["sqlalchemy.url"] = get_url()
+
+    # 关键修改：取消注释并确保使用转换后的同步 URL
+    configuration["sqlalchemy.url"] = get_url()
 
     connectable = engine_from_config(
         configuration,
