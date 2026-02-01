@@ -7,10 +7,10 @@ from pathlib import Path
 sys.path.append(str(Path(__file__).parent.parent))
 
 import asyncio
-from sqlalchemy import delete
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine, AsyncSession
 from app.db.base import Base
 from app.models.content import Content
+from sqlalchemy import select, delete  # 只添加这行导入
 
 # 数据库配置（与 app/db/session.py 一致）
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite+aiosqlite:///./gep.db")
@@ -88,11 +88,21 @@ async def init():
         # await session.execute(delete(Content))
 
         for data in contents_data:
-            content = Content(**data)
-            session.add(content)
+            # 检查该slug是否已存在
+            result = await session.execute(
+                select(Content).where(Content.slug == data["slug"])
+            )
+            exists = result.scalar_one_or_none()
+
+            if not exists:
+                content = Content(**data)
+                session.add(content)
+                print(f"Inserted: {data['slug']}")
+            else:
+                print(f"Skipped (exists): {data['slug']}")
 
         await session.commit()
-        print(f"Initialized {len(contents_data)} content records")
+        print(f"Initialization complete")
 
 
 # 入口点
