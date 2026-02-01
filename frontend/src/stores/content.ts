@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import axios from 'axios'
+import request from '@/api/request'
 
 export interface Content {
   id: number
@@ -20,7 +21,7 @@ export const useContentStore = defineStore('content', () => {
     loading.value = true
     error.value = ''
     try {
-      const response = await axios.get(`/api/contents/${slug}`)
+      const response = await request.get(`/contents/${slug}`)
       currentContent.value = response.data
     } catch (e) {
       error.value = '加载失败'
