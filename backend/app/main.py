@@ -8,8 +8,8 @@ app = FastAPI(title="GEP Platform API", version="1.0.0")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173",
-                   "https://gep-application-frontend.onrender.com",],  # Vite 默认端口
+    allow_origins=["http://localhost:5173",  # 本地开发
+                   "https://gep-front.onrender.com",],  # 生产环境前端
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
