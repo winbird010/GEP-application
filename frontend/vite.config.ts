@@ -3,9 +3,8 @@ import vue from '@vitejs/plugin-vue'
 import { resolve } from 'path'
 
 // https://vitejs.dev/config/
-export default defineConfig({
+export default defineConfig(({ mode }) => ({  // 注意：是 ({ mode }) 不是 (mode)
   plugins: [vue()],
-
   resolve: {
     alias: {
       '@': resolve(__dirname, 'src')
@@ -16,12 +15,15 @@ export default defineConfig({
   server: {
     port: 5173,
     proxy: {
-      '/api': 'http://localhost:8000'
+      '/api': {
+        target: 'http://localhost:8000',
+        changeOrigin: true
+      }
     },
-    // 本地也带压缩 & 长缓存（调试无影响）
-    headers: {
+    // 开发环境不缓存，生产环境才加缓存头
+    headers: mode === 'production' ? {
       'Cache-Control': 'public, max-age=31536000, immutable'
-    }
+    } : undefined
   },
 
   // ---------- 生产构建 ----------
@@ -37,7 +39,6 @@ export default defineConfig({
     chunkSizeWarningLimit: 1200,
     rollupOptions: {
       output: {
-        // 手动拆包 + 内容哈希（长期缓存友好）
         manualChunks: {
           vue: ['vue', 'vue-router', 'pinia'],
           element: ['element-plus']
@@ -47,8 +48,7 @@ export default defineConfig({
         assetFileNames: 'assets/[name]-[hash].[ext]'
       }
     },
-    // 输出 gzip 大小报告（Vite 4+ 自动生成 .gz）
     reportCompressedSize: true,
     write: true
   }
-})
+}))

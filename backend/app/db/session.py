@@ -6,7 +6,11 @@ from sqlalchemy.pool import NullPool
 from app.db.base import Base
 from app.core.config import settings
 
+# 如果原来是这样（PostgreSQL适合网络）
 DATABASE_URL = "sqlite+aiosqlite:///./gep.db"
+
+# # 改为 SQLite（本地开发最简单）
+# DATABASE_URL = "sqlite+aiosqlite:///./gep.db"
 
 engine = create_async_engine(
     settings.DATABASE_URL_ASYNC,
