@@ -1,13 +1,10 @@
 <template>
   <div class="home-container">
-    <!-- Hero 区域：展示 home.py 的平台介绍 -->
+    <!-- 只保留 Hero 文本（平台介绍长文本） -->
     <div class="hero-section" v-if="homeData">
-      <h1 class="main-title">{{ homeData.title }}</h1>
-      <h2 class="sub-title">{{ homeData.subtitle }}</h2>
-      <el-divider />
       <p class="hero-text">{{ homeData.hero }}</p>
 
-      <!-- 统计数据：5+应用领域、100+案例等 -->
+      <!-- 统计数据 -->
       <el-row :gutter="20" class="stats-row">
         <el-col :xs="24" :sm="8" v-for="stat in homeData.stats" :key="stat.label">
           <el-card class="stat-card" shadow="hover">
@@ -22,9 +19,9 @@
     </div>
 
     <!-- 加载状态 -->
-    <el-skeleton v-else :rows="10" animated />
+    <el-skeleton v-else :rows="6" animated />
 
-    <!-- 5个应用领域入口（保留现有功能） -->
+    <!-- 应用领域入口卡片 -->
     <div class="modules-section">
       <h3 class="section-title">应用领域</h3>
       <el-row :gutter="20">
@@ -51,42 +48,16 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
+import { Money, ScaleToOriginal, ShoppingCart, Warning, More } from '@element-plus/icons-vue'
 
-// 与 ContentCard 相同的 API 调用方式
 const homeData = ref<any>(null)
 
-// 5个模块配置（与现有入口一致）
 const modules = [
-  {
-    slug: 'financing',
-    name: '融资信贷',
-    desc: '基于GEP核算的绿色金融支持',
-    icon: 'Money'
-  },
-  {
-    slug: 'compensation',
-    name: '生态补偿',
-    desc: '跨区域生态补偿机制',
-    icon: 'ScaleToOriginal'
-  },
-  {
-    slug: 'trading',
-    name: '市场交易',
-    desc: '生态产品市场化交易',
-    icon: 'ShoppingCart'
-  },
-  {
-    slug: 'damage',
-    name: '损害赔偿',
-    desc: '环境损害量化赔偿',
-    icon: 'Warning'
-  },
-  {
-    slug: 'others',
-    name: '其它应用',
-    desc: '考核评价、规划决策等',
-    icon: 'More'
-  }
+  { slug: 'financing', name: '融资信贷', desc: '基于GEP核算的绿色金融支持', icon: 'Money' },
+  { slug: 'compensation', name: '生态补偿', desc: '跨区域生态补偿机制', icon: 'ScaleToOriginal' },
+  { slug: 'trading', name: '市场交易', desc: '生态产品市场化交易', icon: 'ShoppingCart' },
+  { slug: 'damage', name: '损害赔偿', desc: '环境损害量化赔偿', icon: 'Warning' },
+  { slug: 'others', name: '其它应用', desc: '考核评价、规划决策等', icon: 'More' }
 ]
 
 // 获取首页数据（调用 home.py 接口）
@@ -98,9 +69,12 @@ onMounted(async () => {
     console.error('获取首页数据失败:', error)
     // 失败时显示默认数据（可选）
     homeData.value = {
-      title: 'GEP应用平台',
-      subtitle: '生态系统生产总值核算成果应用',
-      hero: 'GEP核算已从理论走向实践...',
+      hero: 'GEP核算已从理论走向实践，生态价值正在变为"真金白银"。从四川巴州的GEP质押贷款，到湖北神农架-襄阳的' +
+        '"水质对赌"补偿，再到重庆开州-宣汉的跨省生态指标交易，全国各地已涌现出融资信贷、生态补偿、市场交易、损害赔偿' +
+        '等多个领域的成功案例，证明了GEP核算能带来实实在在的收益。当前，虽然国家层面统一的制度设计尚在完善，地方实践' +
+        '也因支持力度不同而进展不一，但"绿水青山就是金山银山"的理念已深入人心。随着国家生态文明建设的深化，更多标准化、' +
+        '市场化的政策工具必将出台，GEP核算的应用前景广阔。率先探索的地方，不仅将获得生态与经济的双重回报，更将在未来的' +
+        '绿色发展格局中占据先机。',
       stats: [
         { label: '应用领域', value: '5+', icon: 'Grid' },
         { label: '成功案例', value: '100+', icon: 'TrendCharts' },
@@ -113,32 +87,17 @@ onMounted(async () => {
 
 <style scoped>
 .home-container {
-  max-width: 1000px;
+  max-width: 100%;
   margin: 0 auto;
-  padding: 20px;
 }
 
-/* Hero 区域样式 */
+/* Hero 区域：只保留文本 */
 .hero-section {
-  text-align: center;
-  margin-bottom: 60px;
-  padding: 40px 20px;
-  background: linear-gradient(135deg, #f0f9eb 0%, #ffffff 100%);
-  border-radius: 12px;
-}
-
-.main-title {
-  font-size: 36px;
-  color: #303133;
-  margin-bottom: 10px;
-  font-weight: bold;
-}
-
-.sub-title {
-  font-size: 20px;
-  color: #67C23A;
-  margin-bottom: 30px;
-  font-weight: 500;
+  background: #fff;
+  padding: 30px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
 }
 
 .hero-text {
@@ -147,34 +106,32 @@ onMounted(async () => {
   color: #606266;
   text-align: justify;
   text-indent: 2em;
-  margin: 20px 0 40px;
-  white-space: pre-line;  /* 保留 home.py 中的换行符 */
-  max-width: 800px;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 0 0 30px 0;  /* 移除上方 margin，因为去掉了标题 */
+  white-space: pre-line;
 }
 
-/* 统计卡片样式 */
+/* 统计卡片 */
 .stats-row {
-  margin-top: 40px;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #ebeef5;
 }
 
 .stat-card {
   text-align: center;
-  padding: 30px 20px;
-  margin-bottom: 20px;
+  padding: 20px;
   transition: transform 0.3s;
 }
 
 .stat-card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-3px);
 }
 
 .stat-value {
-  font-size: 36px;
+  font-size: 32px;
   font-weight: bold;
   color: #67C23A;
-  margin: 15px 0 5px;
+  margin: 10px 0 5px;
 }
 
 .stat-label {
@@ -182,41 +139,31 @@ onMounted(async () => {
   color: #909399;
 }
 
-/* 应用领域区域 */
+/* 应用领域 */
 .modules-section {
-  margin-top: 60px;
+  margin-top: 30px;
 }
 
 .section-title {
-  font-size: 24px;
+  font-size: 20px;
   color: #303133;
-  text-align: center;
-  margin-bottom: 30px;
-  position: relative;
-}
-
-.section-title::after {
-  content: '';
-  display: block;
-  width: 60px;
-  height: 3px;
-  background: #67C23A;
-  margin: 10px auto 0;
-  border-radius: 2px;
+  margin-bottom: 20px;
+  padding-left: 10px;
+  border-left: 4px solid #67C23A;
 }
 
 .module-card {
   cursor: pointer;
   text-align: center;
-  padding: 30px 20px;
+  padding: 25px 20px;
   margin-bottom: 20px;
   transition: all 0.3s;
-  border: 1px solid #ebeef5;
+  background: #fff;
 }
 
 .module-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+  box-shadow: 0 8px 16px rgba(0,0,0,.1);
   border-color: #67C23A;
 }
 
@@ -225,31 +172,15 @@ onMounted(async () => {
 }
 
 .module-name {
-  font-size: 18px;
+  font-size: 16px;
   color: #303133;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
   font-weight: 600;
 }
 
 .module-desc {
-  font-size: 14px;
+  font-size: 13px;
   color: #909399;
   line-height: 1.5;
-}
-
-/* 响应式适配 */
-@media (max-width: 768px) {
-  .main-title {
-    font-size: 28px;
-  }
-
-  .hero-text {
-    font-size: 14px;
-    text-indent: 1.5em;
-  }
-
-  .stat-value {
-    font-size: 28px;
-  }
 }
 </style>
